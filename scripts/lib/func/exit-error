@@ -1,0 +1,6 @@
+#!/bin/bash
+
+function exit-error {
+	echo "Error: $1" >&2
+	exit ${2:-1}
+}

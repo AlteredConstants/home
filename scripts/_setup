@@ -1,0 +1,23 @@
+#!/bin/bash
+script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+source "$("$script_path/get-lib-path" func/exit-error)"
+
+if [[ ! -d $HOME ]]; then
+	exit-error "HOME directory does not exist: $HOME"
+fi
+
+repo_root="$(cd "$script_path/.."; pwd)"
+normalized_home="$(cd "$HOME"; pwd)"
+if [[ $repo_root != $normalized_home ]]; then
+	echo "Merging into HOME ($HOME)..."
+	if [[ -d $HOME/.git ]]; then
+		exit-error "HOME/.git already exists and would merge poorly"
+	fi
+	shopt -s dotglob
+	cp -riv "$repo_root"/* "$HOME"
+	shopt -u dotglob
+fi
+
+cd "$HOME"
+echo "Updating submodules..."
+git submodule update --init --recursive
