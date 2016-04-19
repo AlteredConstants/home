@@ -1,0 +1,60 @@
+#!/bin/bash
+
+alias ifconfig=ipconfig
+
+function sudo {
+	local sudo='sudo.ps1'
+	case "$1" in
+		cmd)
+			shift
+			$sudo "cmd.exe \/K $@"
+			;;
+		*)
+			$sudo "$@"
+			;;
+	esac
+}
+
+if ! run-lib is-cygwin; then
+	function open {
+		start "${1-$PWD}"
+	}
+
+else
+	alias kdiff3=kdiff3-cygwin
+
+	function open {
+		explorer /e,$(cygpath -w ${1-$PWD})
+	}
+
+	function cmd {
+		cygstart cmd.exe /K $@
+	}
+
+	function start_ssh_agent {
+		SSHAGENT=/usr/bin/ssh-agent
+		SSHAGENTARGS="-s"
+		if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then
+		    eval `$SSHAGENT $SSHAGENTARGS`
+		    trap "kill $SSH_AGENT_PID" 0
+		    ssh-add ~/.ssh/id_rsa
+		fi
+	}
+
+	# Load all the Ruby Gems as aliases so the Windows paths work.
+	function add_gem_aliases {
+		# Gem needs to be loaded manually for some reason.
+		alias gem=gem.bat
+		if [[ -n "$(which ruby 2>/dev/null)" ]]; then
+			local ruby_bin=$(cygpath -u $(ruby -e 'puts RbConfig::CONFIG["bindir"]') | tr -d '\r')
+			local gems=$(find "${ruby_bin}" -regex ".*\.bat$" | xargs -n1 basename)
+			for gem in $gems; do
+				#echo "Adding alias for ${gem}"
+				alias ${gem%.bat}=${gem}
+			done
+		fi
+	}
+
+	add_gem_aliases
+	start_ssh_agent
+fi

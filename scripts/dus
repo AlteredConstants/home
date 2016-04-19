@@ -1,0 +1,15 @@
+#!/bin/bash
+count=$1
+du -a 2>&1 | grep -vi 'Permission denied' | \
+sort -nr | \
+
+# Human-readable output isn't working.
+# This might be a better option:
+# numfmt --to=iec-i --suffix=B --format="%3f" 4953205820
+
+#cut -f2- | \
+#tr '\n' '\0' | \
+#xargs -0 du -sh 2>&1 | grep -vi 'Permission denied' | \
+
+( test -n "$count" && head -n $count || cat ) | \
+grep -Ev '^0'

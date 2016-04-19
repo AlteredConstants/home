@@ -1,0 +1,30 @@
+#!/bin/bash --login
+source "$(get-lib-path func/nvm-use)"
+
+function create_version_file {
+	mkdir -p node_modules
+	echo "$node_version" > node_modules/.node_version
+}
+
+node_version="$1"
+if [[ -z $node_version ]]; then
+	echo "Error: missing Node version argument" >&2
+	exit 1
+fi
+
+if [[ ! -d node_modules ]]; then
+	create_version_file
+fi
+
+built_version="$(cat node_modules/.node_version 2>/dev/null)"
+if [[ $built_version != $node_version ]]; then
+	echo "Cleaning up Node modules from version ${built_version:-UNKNOWN}..."
+	# Some modules need to be recompiled, so just delete them all.
+	#find node_modules -name binding.gyp | xargs dirname | xargs rm -rfv || exit 1
+	npm rebuild || exit 1
+	create_version_file || exit 1
+fi
+
+echo 'Updating Node modules...'
+nvm-use $node_version && npm install
+

@@ -1,0 +1,25 @@
+#!/bin/bash --login
+source "$(get-lib-path func/nvm-use)"
+
+new_node_version="$1"
+if [[ -z $new_node_version ]]; then
+	echo "Error: missing Node version argument" >&2
+	exit 1
+fi
+
+if ! run-lib node/version is-installed $new_node_version; then
+	echo 'Installing new Node version...'
+	nvm install $new_node_version || exit 1
+fi
+
+nvm-use $new_node_version || exit 1
+
+if [[ -n $GLOBAL_NPM_MODULES ]]; then
+	for module in $GLOBAL_NPM_MODULES; do
+		if ! npm list --global $module >/dev/null 2>&1; then
+			echo "Adding global module ${module}..."
+			npm install --global $module || exit 1
+		fi
+	done
+fi
+

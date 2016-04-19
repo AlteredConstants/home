@@ -1,0 +1,15 @@
+#!/bin/bash
+method=$1
+resource=$2
+if [[ ! -t 0 ]]; then
+	data="$(tr "[:space:]" " " <&0)"
+fi
+options="$(for option in "${@:3}"; do echo -n "'$option' "; done)"
+eval "curl $resource \
+	--silent \
+	--show-error \
+	--write-out '\n' \
+	--request $method \
+	--header 'Content-Type: application/json' \
+	$options \
+	--data '$data'"

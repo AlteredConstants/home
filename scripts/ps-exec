@@ -1,0 +1,10 @@
+#!/bin/bash
+
+script=$1
+args=${@:2}
+
+if run-lib is-cygwin; then
+	script=$(cygpath -w "$script")
+fi
+
+powershell "$script" $args

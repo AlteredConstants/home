@@ -1,0 +1,20 @@
+#!/bin/bash
+home_dir="$(realpath "$HOME")"
+current_dir="$(pwd -P)"
+
+if [[ -z $home_dir || ! -d $home_dir ]]; then
+	echo "Error: could not find the home directory (HOME=\"$HOME\")" >&2
+	exit 1
+fi
+
+if [[ $home_dir == $current_dir ]]; then
+	echo "Refusing to clean the home directory repo. (That's probably not what you wanted to do.)"
+	exit 0
+fi
+
+# Maybe do this. We'll see how it goes.
+#echo -n "Clean \"$(basename "$current_dir")\" ($current_dir) [yes/no]? "
+#read confirm
+#if [[ $confirm == yes ]]; then
+git clean -i $GIT_CLEAN_ARGS $@
+#fi

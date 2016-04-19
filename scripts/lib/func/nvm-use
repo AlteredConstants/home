@@ -1,0 +1,9 @@
+#!/bin/bash --login
+
+function nvm-use {
+	local new_version="$1"
+	local current_version="$(run-lib node/version current)"
+	if [[ $new_version != $current_version ]]; then
+		nvm use $new_version && which npm >/dev/null
+	fi
+}

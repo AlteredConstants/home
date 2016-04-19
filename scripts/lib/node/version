@@ -1,0 +1,32 @@
+#!/bin/bash --login
+
+function current {
+	if [[ $(run-lib get-platform) == windows ]]; then
+		nvm list | sed -nE 's/\* ([0-9.]+) .*/\1/p' | tr -d ' '
+	else
+		nvm current | sed -E 's/^v//g'
+	fi
+}
+
+function new {
+	if [ ! -f .nvmrc ]; then
+		echo "No .nvmrc found." >&2
+		return 1
+	fi
+	cat .nvmrc
+}
+
+function is-installed {
+	local version="${1:-$(new)}"
+	if [ -z "$version" ]; then
+		echo "No version found." >&2
+		return 1
+	fi
+	if nvm list | grep -q $version; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+$@

@@ -1,0 +1,34 @@
+[user]
+	name = Zeff Svoboda
+	email = zeff@alteredconstants.com
+[alias]
+	co = commit
+	ch = checkout
+	st = status -s
+	mt = mergetool
+	dt = difftool --dir-diff
+	br = branch
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	sup = submodule update --recursive
+	graph = log --graph --abbrev-commit --pretty=format:'%Cred%h %Cgreen(%cr)%Creset %C(bold blue)<%an>%Creset -%C(yellow)%d%Creset %s'
+[init]
+	templatedir = ~/.git-template
+[push]
+	default = upstream
+[fetch]
+	prune = true
+[diff]
+	guitool = kdiff3
+[difftool]
+	prompt = false
+[difftool "diffmerge"]
+	cmd = diffmerge --nosplash -t1='Local' -t2='Remote' $LOCAL $REMOTE
+[merge]
+	tool = kdiff3
+[mergetool]
+	keepBackup = false
+[mergetool "diffmerge"]
+	cmd = diffmerge --nosplash --merge -t1='Local' -t2='Base (merged)' -t3='Remote' --result=$MERGED $LOCAL $BASE $REMOTE
+	trustExitCode = true
+[core]
+	autocrlf = false

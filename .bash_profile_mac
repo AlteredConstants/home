@@ -1,0 +1,24 @@
+#!/bin/bash
+
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+alias gvim='open -a /Applications/MacVim.app/Contents/MacOS/MacVim'
+alias code='open -a /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+	source $(brew --prefix)/etc/bash_completion
+fi
+
+### NVM ###
+
+nvm_dir="$(brew --prefix nvm)"
+if [[ -d $nvm_dir ]]; then
+	export NVM_DIR="$nvm_dir"
+	source "$nvm_dir/nvm.sh"
+fi
+
+### RVM ###
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+

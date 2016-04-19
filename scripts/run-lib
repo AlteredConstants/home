@@ -1,0 +1,8 @@
+#!/bin/bash
+command="$(get-lib-path "$1")"
+args="${@:2}"
+if [[ -z $command ]]; then
+	echo "Error: command \"$1\" does not exist" >&2
+	exit 1
+fi
+"$command" $args

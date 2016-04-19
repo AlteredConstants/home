@@ -1,0 +1,94 @@
+#!/bin/bash
+
+npm_2_patch=$(
+cat <<'EOF'
+--- git.js  2015-05-11 16:19:29.114852900 -0400
++++ git-patched.js  2015-05-11 16:19:35.788234600 -0400
+@@ -12,14 +12,23 @@
+   , git = npm.config.get("git")
+   , assert = require("assert")
+   , log = require("npmlog")
++  , win32 = process.platform === "win32"
++  , cygwin = win32 && (process.env.ORIGINAL_PATH || '').indexOf('/cygdrive/') != -1
+
+ function prefixGitArgs () {
+-  return process.platform === "win32" ? ["-c", "core.longpaths=true"] : []
++  return win32 ? ["-c", "core.longpaths=true"] : []
+ }
+
+ function execGit (args, options, cb) {
+-  log.info('git', args)
++  if(cygwin && args) {
++      for(var i=0; i<args.length; i++) {
++          if(':\\'.indexOf(args[i]) != 1) {
++              args[i] = args[i].replace(/\\/g, '/').replace(/^([A-Za-z])\:\//, '/cygdrive/$1/');
++          }
++      }
++  }
+   var fullArgs = prefixGitArgs().concat(args || [])
++  log.info('git', fullArgs)
+   return exec(git, fullArgs, options, cb)
+ }
+EOF
+)
+
+npm_3_patch=$(
+cat <<'EOF'
+--- git.js      2015-11-25 14:02:56.377515400 -0600
++++ git-patched.js      2015-11-25 14:27:35.755383400 -0600
+@@ -11,14 +11,23 @@
+ var git = npm.config.get('git')
+ var assert = require('assert')
+ var log = require('npmlog')
++var win32 = process.platform === "win32"
++var cygwin = win32 && (process.env.ORIGINAL_PATH || '').indexOf('/cygdrive/') != -1
+
+ function prefixGitArgs () {
+-  return process.platform === 'win32' ? ['-c', 'core.longpaths=true'] : []
++  return win32 ? ["-c", "core.longpaths=true"] : []
+ }
+
+ function execGit (args, options, cb) {
+-  log.info('git', args)
++  if(cygwin && args) {
++    for(var i=0; i<args.length; i++) {
++      if(':\\'.indexOf(args[i]) != 1) {
++        args[i] = args[i].replace(/\\/g, '/').replace(/^([A-Za-z])\:\//, '/cygdrive/$1/');
++      }
++    }
++  }
+   var fullArgs = prefixGitArgs().concat(args || [])
++  log.info('git', fullArgs)
+   return exec(git, fullArgs, options, cb)
+ }
+EOF
+)
+
+if [[ $(run-lib get-platform) != windows ]]; then
+	echo "Patching not needed on non-Windows platforms."
+	exit 0
+fi
+
+utils_path="$(dirname "$(which npm)")/node_modules/npm/lib/utils"
+git_file_path="git.js"
+marker_path="$utils_path/git.js.orig"
+npm_version="$(npm --version)"
+
+if [[ -f $marker_path ]]; then
+	echo "npm already patched."
+	exit 0
+fi
+
+case "$npm_version" in
+	2.*) npm_patch="$npm_2_patch" ;;
+	3.*) npm_patch="$npm_3_patch" ;;
+	*)
+		echo "No patch available for npm version \"$npm_version\"."
+		exit 0
+		;;
+esac
+
+pushd "$utils_path"
+echo "$npm_patch" | patch -b git.js
+popd
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+declare -a new_args
+for (( i=1; i <= $#; i++ )); do
+	arg=${!i}
+	if [ -e "$arg" ]; then
+		conv_arg=$(cygpath -wa "$arg")
+	else
+		conv_arg="$arg"
+	fi
+	new_args[i]="$conv_arg"
+done
+/cygdrive/c/Program\ Files/KDiff3/kdiff3.exe "${new_args[@]}"

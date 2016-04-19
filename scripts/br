@@ -1,0 +1,105 @@
+#!/bin/bash
+check_new=false
+delete_old=false
+user_prefix=zs
+branch_prefix_pattern="$user_prefix"
+ticket_prefix=
+
+is_number() { test "$1" && printf '%f' "$1" >/dev/null 2>&1; }
+
+function branch_selection() {
+	branches=($@)
+	if (( ${#branches[@]} == 1 )); then
+		selection=0
+		return
+	fi
+	echo "Multiple branches exist. Pick one:"
+	local i=1
+	for branch in "${branches[@]}"; do
+		echo "$i: $branch"
+		i=$((i + 1))
+	done
+	echo -n "Branch number: "
+	read selection
+	if is_number "$selection"; then
+		selection=$((selection - 1))
+	else
+		selection=-1
+	fi
+}
+
+function prompt_for_branch() {
+	if [ -n "$pattern" ]; then
+		branches=($(for branch in $@; do echo $branch; done | grep "$pattern"))
+	else
+		branches=($@)
+	fi
+	if (( ${#branches[@]} <= 0 ));then
+		echo "No branches found."
+		exit 0
+	fi
+	until [ -n "$selected_branch" ]; do
+		if [ -z "$selection" ]; then
+			branch_selection "${branches[@]}"
+		fi
+		if (( $selection < 0 )) || (( $selection > ${#branches[@]} )); then
+			echo "Bad selection. Try again."
+			unset selection
+			continue
+		fi
+		selected_branch=${branches[$selection]}
+	done
+	# Translate the partial name back to a branch name.
+	selected_branch=$(git for-each-ref --format="%(refname:short)" | \
+		grep -E "$branch_prefix_pattern/$selected_branch" | \
+		head -n1 | \
+		sed -e 's#^origin/##')
+}
+
+for arg; do
+	case $arg in
+		-n)
+			check_new=true
+			;;
+		-d)
+			delete_old=true
+			;;
+		''|*[!0-9]*)
+			# Anything that's not a number.
+			pattern="$arg"
+			;;
+		*)
+			# Must only be a number.
+			selection=$((arg - 1))
+			;;
+	esac
+done
+
+if $check_new || $delete_old; then
+	echo "Fetching..."
+	git fetch >/dev/null 2>&1 || echo "Fetching failed."
+	remote_branches=$(git for-each-ref --format="%(refname:short)" | \
+		grep -Ei "^origin/$branch_prefix_pattern/$ticket_prefix" | \
+		sed -Ee "s#^origin/$branch_prefix_pattern/##" | \
+		sort)
+fi
+
+local_branches=$(git for-each-ref --format="%(refname:short)" | \
+	grep -Ei "^$branch_prefix_pattern/$ticket_prefix" | \
+	sed -Ee "s#^$branch_prefix_pattern/##" | \
+	sort)
+
+if $check_new; then
+	new_branches=$(comm -13 \
+		<(echo "$local_branches") <(echo "$remote_branches"))
+	prompt_for_branch $new_branches
+	git checkout $selected_branch
+elif $delete_old; then
+	old_branches=$(comm -23 \
+		<(echo "$local_branches") <(echo "$remote_branches"))
+	prompt_for_branch $old_branches
+	git branch -d $selected_branch
+else
+	prompt_for_branch $local_branches
+	git checkout $selected_branch
+fi

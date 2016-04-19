@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+var readline = require('readline');
+
+var path = process.argv[2] || '';
+var blob = process.argv[3] || '';
+
+function exitError(message, code) {
+	code = code || 1;
+	console.error('Error: ' + message);
+	process.exit(code);
+}
+
+function getValue(data, prop) {
+	var match = prop.match(/^([\w]+)(?:\[(\w+)\])?$/);
+	if (!match) exitError('could not parse property "' + prop + '"');
+	var subdata = data[match[1]];
+	var childProp = match[2];
+	return childProp ? subdata[childProp] : subdata;
+}
+
+function printValue(blob) {
+	var data = JSON.parse(blob);
+	var value = path ? path.split('.').reduce(getValue, data) : data;
+	console.log(value);
+}
+
+if (blob || process.stdin.isTTY) {
+	if (!blob) exitError('missing JSON blob');
+	printValue(blob);
+} else {
+	var rl = readline.createInterface({
+		input: process.stdin,
+		terminal: false
+	});
+	rl.on('line', function(partialBlob) {
+		blob += ' ' + partialBlob;
+	});
+	rl.on('close', function() {
+		printValue(blob);
+	});
+}
+

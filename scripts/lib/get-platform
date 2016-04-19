@@ -1,0 +1,10 @@
+#!/bin/bash
+
+platform="$(uname -s)"
+case $platform in
+	Linux) echo linux ;;
+	Darwin) echo mac ;;
+	MSYS_NT*|MINGW*|CYGWIN*) echo windows ;;
+	*) echo "$platform" ;;
+esac
+
