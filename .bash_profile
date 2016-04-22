@@ -4,9 +4,7 @@ pushd "$HOME" >/dev/null
 # Have to add the scripts to the path before using them.
 export PATH="$HOME/scripts:$PATH"
 
-for func_file in "$HOME/scripts/lib/func/"*; do
-	source "$func_file"
-done
+alias jspm='run-lib npm-run jspm'
 
 # Ignore duplicate history items.
 export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'

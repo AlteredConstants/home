@@ -1,0 +1,7 @@
+#!/bin/bash --login
+npm_bin=$(npm bin)
+if [[ $(run-lib get-platform) == windows ]]; then
+	npm_bin=$(convert-path -p "$npm_bin")
+fi
+PATH=$npm_bin:$PATH
+eval "$@"
