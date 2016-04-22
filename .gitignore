@@ -1,3 +1,5 @@
 # Ignore everything unless explicitly added.
 /*
+# Except in scripts which should all be tracked.
 !/scripts/
+*.swp
