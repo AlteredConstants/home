@@ -1,0 +1,23 @@
+#!/bin/bash
+source "$(get-lib-path func/exit-error)"
+to_windows=null
+
+while getopts puw opt; do
+	case $opt in
+		[pu]) to_windows=false ;;
+		w) to_windows=true ;;
+		\?) exit-error "bad argument: -$opt"
+	esac
+done
+if [[ $to_windows == null ]]; then
+	exit-error "missing conversion type argument (-w or -p)"
+fi
+shift $((OPTIND-1))
+path="$1"
+
+if $to_windows; then
+	run-lib convert-path-to-windows "$path"
+else
+	run-lib convert-path-to-posix "$path"
+fi
+
