@@ -1,8 +1,7 @@
 #!/bin/bash
-command="$(get-lib-path "$1")"
-args="${@:2}"
+source $(get-lib-path func/exit-error)
+command=$(get-lib-path "$1")
 if [[ -z $command ]]; then
-	echo "Error: command \"$1\" does not exist" >&2
-	exit 1
+	exit-error "command \"$1\" does not exist"
 fi
-"$command" $args
+"$command" "${@:2}"
