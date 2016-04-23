@@ -1,12 +1,18 @@
 #!/usr/bin/env ps-exec
 
-$first, $rest = $args
+$command, $args = $args
 
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))
 {
 	$runAs = "-Verb runAs"
 }
-if ($rest) {
-	$rest = "`"$rest`""
+$argList = ""
+if ($args) {
+	$firstArg, $restArgs = $args
+	$argList = "`"$firstArg`""
+	foreach ($arg in $restArgs) {
+		$argList = "$argList,`"$arg`""
+	}
+	$argList = "-ArgumentList ($argList)"
 }
-Invoke-Expression "Start-Process `"$first`" $rest $runAs"
+Invoke-Expression "Start-Process -FilePath `"$command`" $argList $runAs"

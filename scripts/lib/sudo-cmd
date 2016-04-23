@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Windows-style option needs to be escaped in MingW
+# or else it turns into a path.
+if run-lib is-cygwin; then
+	slash_k=/K
+else
+	slash_k=//K
+fi
+
+# Don't expect a command to run if there are no arguments
+# as $@ will be empty. (For just opening a new CMD prompt.)
+if [[ $# > 0 ]]; then
+    and_run='&&'
+else
+    and_run=''
+fi
+
+sudo.ps1 cmd.exe $slash_k cd "$(convert-path -w $(pwd))" $and_run "$@"
+

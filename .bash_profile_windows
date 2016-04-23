@@ -2,30 +2,19 @@
 
 alias ifconfig=ipconfig
 
+function open {
+	explorer /e,$(convert-path -w ${1-$PWD})
+}
+
 function sudo {
-	local sudo='sudo.ps1'
 	case "$1" in
-		cmd)
-			shift
-			$sudo "cmd.exe \/K $@"
-			;;
-		*)
-			$sudo "$@"
-			;;
+		cmd) run-lib sudo-cmd "${@:2}" ;;
+		*) sudo.ps1 "$@" ;;
 	esac
 }
 
-if ! run-lib is-cygwin; then
-	function open {
-		start "${1-$PWD}"
-	}
-
-else
+if run-lib is-cygwin; then
 	alias kdiff3=kdiff3-cygwin
-
-	function open {
-		explorer /e,$(cygpath -w ${1-$PWD})
-	}
 
 	function cmd {
 		cygstart cmd.exe /K $@
@@ -58,3 +47,4 @@ else
 	add_gem_aliases
 	start_ssh_agent
 fi
+
