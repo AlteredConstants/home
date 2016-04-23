@@ -1,0 +1,40 @@
+#!/bin/bash
+source $(get-func-path exit-error)
+
+function usage {
+cat <<EOF
+usage: $(basename $0) TARGET [LINK]
+	TARGET: the target of the symlink.
+	LINK: the path to the symlink to create.
+EOF
+}
+
+target=$1
+[[ -n $target ]] || exit-usage-error "missing target path"
+[[ -e $target ]] || exit-usage-error "target path does not exist"
+
+if [[ $(run-lib get-platform) != windows ]]; then
+	ln -s "$@"
+	exit $?
+fi
+
+if [[ -d $target ]]; then
+	is_dir=true
+else
+	is_dir=false
+fi
+
+target=$(convert-path -w "$(realpath $target)")
+if [[ $# < 2 ]]; then
+	link=$(basename "$target")
+else
+	link=$2
+fi
+link=$(convert-path -w "$(realpath $link)")
+if $is_dir; then
+	dir_arg='/D'
+else
+	dir_arg=''
+fi
+run-lib sudo-cmd mklink $dir_arg "$link" "$target"
+

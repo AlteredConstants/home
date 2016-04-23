@@ -2,6 +2,13 @@
 
 function exit-error {
 	local script_name="$(basename "$0")"
-	echo "Error: $script_name: $1" >&2
+	echo "$script_name: error: $1" >&2
+	exit ${2:-1}
+}
+
+function exit-usage-error {
+	local script_name="$(basename "$0")"
+	echo "$script_name: error: $1" >&2
+	[[ $(type -t usage) == function ]] && usage
 	exit ${2:-1}
 }

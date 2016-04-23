@@ -1,6 +1,6 @@
 #!/bin/bash
 script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
-source "$("$script_path/get-lib-path" func/exit-error)"
+source "$("$script_path/get-func-path" exit-error)"
 
 if [[ ! -d $HOME ]]; then
 	exit-error "HOME directory does not exist: $HOME"
@@ -19,5 +19,12 @@ if [[ $repo_root != $normalized_home ]]; then
 fi
 
 cd "$HOME"
+
 echo "Updating submodules..."
 git submodule update --init --recursive
+
+echo "Creating symlinks..."
+platform=$(run-lib get-platform)
+if [[ $platform == windows && ! -e $APPDATA/Code/User/settings.json ]]; then
+	symlink .vscode_config $APPDATA/Code/User/settings.json
+fi

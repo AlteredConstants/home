@@ -1,0 +1,12 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "editor.rulers": [100, 120],
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/jspm_packages": true,
+        "**/build": true
+    }
+}

@@ -1,0 +1,11 @@
+#!/bin/bash
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+path="$script_dir/lib/func"
+command=$1
+if [[ -n $command ]]; then
+	path="$path/$command"
+fi
+if [[ ! -e $path ]]; then
+	exit 1
+fi
+echo "$path"

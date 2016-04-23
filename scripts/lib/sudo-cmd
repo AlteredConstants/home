@@ -8,13 +8,15 @@ else
 	slash_k=//K
 fi
 
-# Don't expect a command to run if there are no arguments
-# as $@ will be empty. (For just opening a new CMD prompt.)
+command_string=''
 if [[ $# > 0 ]]; then
-    and_run='&&'
-else
-    and_run=''
+	command_string="&& $1"
+	for arg in "${@:2}"; do
+		command_string="$command_string \"$arg\""
+	done
 fi
 
-sudo.ps1 cmd.exe $slash_k cd "$(convert-path -w $(pwd))" $and_run "$@"
+sudo.ps1 cmd.exe $slash_k \
+	cd "$(convert-path -w $(pwd))" \
+	$command_string
 
