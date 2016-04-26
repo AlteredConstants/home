@@ -1,6 +1,7 @@
 // Place your settings in this file to overwrite the default settings
 {
     "editor.rulers": [100, 120],
+    "editor.renderWhitespace": true,
     "files.eol": "\n",
     "files.trimTrailingWhitespace": true,
     "search.exclude": {
@@ -8,5 +9,6 @@
         "**/bower_components": true,
         "**/jspm_packages": true,
         "**/build": true
-    }
+    },
+    "rewrap.wrappingColumn": 120
 }
