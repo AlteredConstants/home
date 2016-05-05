@@ -24,8 +24,8 @@ set shiftwidth=4
 set showcmd
 set showmatch
 set ruler
-set backspace=2
 set backspace=indent,eol,start
+set directory=.,$TEMP
 
 syntax enable
 set background=dark
