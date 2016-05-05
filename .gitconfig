@@ -32,3 +32,4 @@
 	trustExitCode = true
 [core]
 	autocrlf = false
+	pager = less -x1,5
