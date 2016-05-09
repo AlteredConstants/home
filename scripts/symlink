@@ -24,15 +24,19 @@ else
 	is_dir=false
 fi
 
-target=$(convert-path -w "$(realpath $target)")
+target=$(convert-path -w "$(realpath "$target")")
 if [[ $# < 2 ]]; then
 	link=$(basename "$target")
 else
 	link=$2
 fi
-link=$(convert-path -w "$(realpath $link)")
+link=$(convert-path -w "$(realpath "$link")")
 if $is_dir; then
-	dir_arg='/D'
+	if run-lib is-cygwin; then
+		dir_arg=/D
+	else
+		dir_arg=//D
+	fi
 else
 	dir_arg=''
 fi

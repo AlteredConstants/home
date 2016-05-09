@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function is-safe {
+	case "$1" in
+		"") return 1 ;;
+		*[[:space:]]*) return 1 ;;
+		*) return 0 ;;
+	esac
+}
+
 # Windows-style option needs to be escaped in MingW
 # or else it turns into a path.
 if run-lib is-cygwin; then
@@ -12,7 +20,12 @@ command_string=''
 if [[ $# > 0 ]]; then
 	command_string="&& $1"
 	for arg in "${@:2}"; do
-		command_string="$command_string \"$arg\""
+		if is-safe "$arg"; then
+			escaped_arg=$arg
+		else
+			escaped_arg="\"$arg\""
+		fi
+		command_string="$command_string $escaped_arg"
 	done
 fi
 
