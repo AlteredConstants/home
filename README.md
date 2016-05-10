@@ -8,5 +8,5 @@ My HOME environment and common scripts (for easy reference and new computer setu
 The following will download and spew everything into your `$HOME` path (**you've been warned**):
 
 ```
-bash -c 'cd "$(mktemp -d)" && git clone git@github.com:AlteredConstants/home.git . && ./scripts/_setup'
+bash -c 'cd "$(mktemp -d)" && git clone https://github.com/AlteredConstants/home.git . && ./scripts/_setup'
 ```

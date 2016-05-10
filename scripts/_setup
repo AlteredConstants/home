@@ -20,6 +20,8 @@ fi
 
 cd "$HOME"
 
+source .bash_profile
+
 echo "Updating submodules..."
 git submodule update --init --recursive
 
@@ -28,3 +30,24 @@ platform=$(run-lib get-platform)
 if [[ $platform == windows && ! -e $APPDATA/Code/User/settings.json ]]; then
 	symlink .vscode_config $APPDATA/Code/User/settings.json
 fi
+
+echo "Checking for SSH keys..."
+if  [[ ! -f .ssh/id_rsa.pub ]]; then
+	echo "No key found. Generating..."
+	ssh-keygen -t rsa -b 4096 -f $HOME/.ssh/id_rsa -N ''
+fi
+
+if [[ $(git config --get remote.origin.url) == https://* ]]; then
+	echo -n "Use SSH for the home repo? [y/N] "
+	read -n 1 use_ssh
+	echo
+	if [[ $use_ssh =~ [yY] ]]; then
+		git remote set-url origin git@github.com:AlteredConstants/home.git
+		echo "==================================================="
+		cat .ssh/id_rsa.pub
+		echo "==================================================="
+		echo "Don't forget to set the key above in the approved list on GitHub."
+	fi
+fi
+
+echo "Done."
