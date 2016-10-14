@@ -1,0 +1,12 @@
+#!/bin/bash
+source "$(get-func-path exit-error)"
+
+function ensure-root {
+	if [[ $(id -u) != 0 ]]; then
+		if [[ $ENSURE_ROOT_RECURSE_COUNT > 3 ]]; then
+			exit-error "failed to elevate to root"
+		fi
+		ENSURE_ROOT_RECURSE_COUNT=$((ENSURE_ROOT_RECURSE_COUNT + 1)) sudo "PATH=$PATH" "$0"
+		exit $?
+	fi
+}

@@ -1,5 +1,5 @@
 #!/bin/bash
-source $(get-lib-path func/exit-error)
+source "$(get-func-path exit-error)"
 command=$(get-lib-path "$1")
 if [[ -z $command ]]; then
 	exit-error "command \"$1\" does not exist"
