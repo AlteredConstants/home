@@ -24,3 +24,4 @@ Locale=C
 Charset=UTF-8
 Font=Consolas
 FontHeight=10
+CursorBlinks=yes
