@@ -4,7 +4,7 @@ pushd "$HOME" >/dev/null
 # Have to add the scripts to the path before using them.
 export PATH="$HOME/scripts:$PATH"
 
-alias jspm='run-lib npm-run jspm'
+alias nr='npm run --silent'
 
 # Ignore duplicate history items.
 export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
