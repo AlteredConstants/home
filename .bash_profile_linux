@@ -5,3 +5,11 @@ export EDITOR=/usr/bin/vim
 # Load NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+if [[ $(run-lib get-win-env) == wsl ]]; then
+	export DISPLAY=:0
+
+	function open {
+		explorer.exe /e,$(convert-path -w ${1-$PWD})
+	}
+fi

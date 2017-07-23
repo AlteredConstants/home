@@ -1,4 +1,5 @@
 #!/bin/bash
+source $(get-func-path win-cli-option)
 
 function is-safe {
 	case "$1" in
@@ -7,14 +8,6 @@ function is-safe {
 		*) return 0 ;;
 	esac
 }
-
-# Windows-style option needs to be escaped in MingW
-# or else it turns into a path.
-if run-lib is-cygwin; then
-	slash_k=/K
-else
-	slash_k=//K
-fi
 
 command_string=''
 if [[ $# > 0 ]]; then
@@ -29,7 +22,7 @@ if [[ $# > 0 ]]; then
 	done
 fi
 
-sudo.ps1 cmd.exe $slash_k \
+sudo.ps1 cmd.exe $(/ K) \
 	cd "$(convert-path -w $(pwd))" \
 	$command_string
 

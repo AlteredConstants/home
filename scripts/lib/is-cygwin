@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(uname -s) == CYGWIN* ]]; then
+if [[ $(run-lib get-win-env) == cygwin ]]; then
 	exit 0
 else
 	exit 1

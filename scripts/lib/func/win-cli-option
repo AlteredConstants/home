@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function / {
+	# Windows-style option needs to be escaped in MingW
+	# or else it turns into a path.
+	if [[ $(run-lib get-win-env) == mingw ]]; then
+		echo //$1
+	else
+		echo /$1
+	fi
+}
+
+function win-cli-option {
+	/ $1
+}
+

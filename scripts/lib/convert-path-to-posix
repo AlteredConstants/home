@@ -8,6 +8,14 @@ fi
 if run-lib is-cygwin; then
 	cygpath -u "$path"
 else
+	if grep -iq '^[a-z]:' <<< "$path"; then
+		root=''
+		if [[ $(run-lib get-win-env) == wsl ]]; then
+			root='/mnt'
+		fi
+		path="$root/$(sed -re 's|^([a-z]):|\l\1|I' <<< "$path")"
+	fi
 	cd 2>/dev/null "$path" && pwd || \
-	echo $path | sed -re 's|\\|/|g' -e 's|^([a-z]):/|/\1/|I' -e 's|/+|/|g' -e 's|/$||'
+	sed -re 's|\\|/|g' -e 's|/+|/|g' -e 's|/$||' <<< "$path"
 fi
+

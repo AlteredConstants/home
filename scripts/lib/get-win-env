@@ -1,0 +1,14 @@
+#!/bin/bash
+
+kernel_name=$(uname -s)
+kernel_release=$(uname -r)
+if [[ $kernel_name =~ ^CYGWIN ]]; then
+	echo cygwin
+elif [[ $kernel_name =~ ^(MSYS_NT|MINGW) ]]; then
+	echo mingw
+elif [[ $kernel_release =~ Microsoft$ ]]; then
+	echo wsl
+else
+	exit 1
+fi
+

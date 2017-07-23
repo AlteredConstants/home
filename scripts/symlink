@@ -1,5 +1,6 @@
 #!/bin/bash
 source $(get-func-path exit-error)
+source $(get-func-path win-cli-option)
 
 function usage {
 cat <<EOF
@@ -13,32 +14,26 @@ target=$1
 [[ -n $target ]] || exit-usage-error "missing target path"
 [[ -e $target ]] || exit-usage-error "target path does not exist"
 
-if [[ $(run-lib get-platform) != windows ]]; then
+if [[ -z $(run-lib get-win-env) ]]; then
 	ln -s "$@"
 	exit $?
 fi
 
 if [[ -d $target ]]; then
-	is_dir=true
+	dir_arg=$(/ D)
 else
-	is_dir=false
+	dir_arg=''
 fi
 
-target=$(convert-path -w "$(realpath "$target")")
 if [[ $# < 2 ]]; then
 	link=$(basename "$target")
 else
 	link=$2
 fi
+
+target=$(convert-path -w "$(realpath "$target")")
 link=$(convert-path -w "$(realpath "$link")")
-if $is_dir; then
-	if run-lib is-cygwin; then
-		dir_arg=/D
-	else
-		dir_arg=//D
-	fi
-else
-	dir_arg=''
-fi
-run-lib sudo-cmd mklink $dir_arg "$link" "$target"
+
+cmd.exe $(/ C) mklink $dir_arg "$link" "$target" \
+|| run-lib sudo-cmd mklink $dir_arg "$link" "$target"
 

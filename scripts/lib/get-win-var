@@ -1,0 +1,6 @@
+#!/bin/bash
+source $(get-func-path win-cli-option)
+var=$1
+
+cmd.exe $(/ C) echo "%$var%" | tr -d '\r'
+

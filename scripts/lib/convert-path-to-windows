@@ -5,11 +5,19 @@ path=$1
 if [[ -z $path ]]; then
 	exit-error "missing path argument"
 fi
-if run-lib is-cygwin; then
-	cygpath -w "$path"
-else
-	{
-		cd 2>/dev/null "$path" && pwd -W || \
-		echo $path | sed -re 's|^/([a-z])/|\1:/|I' -e 's|/+|/|g' -e 's|/$||' 
-	} | sed -e 's|/|\\|g'
-fi
+
+function convert {
+	realpath -m "${1:-$path}" | \
+	sed -r \
+		-e 's|^/(mnt/)?([a-z])/|\2:/|I' \
+		-e 's|/+|/|g' \
+		-e 's|/$||' \
+		-e 's|/|\\|g'
+}
+
+case "$(run-lib get-win-env)" in
+cygwin) cygpath -w "$path" ;;
+mingw) convert "$(cd 2>/dev/null "$path" && pwd -W 2>/dev/null)" ;;
+*) convert ;;
+esac
+

@@ -26,9 +26,12 @@ echo "Updating submodules..."
 git submodule update --init --recursive
 
 echo "Creating symlinks..."
-platform=$(run-lib get-platform)
-if [[ $platform == windows && ! -e $APPDATA/Code/User/settings.json ]]; then
-	symlink .vscode_config $APPDATA/Code/User/settings.json
+if [[ -n $(run-lib get-win-env) ]]; then
+	vsc_dir=$(convert-path -p "$(run-lib get-win-var APPDATA)")/Code/User
+	vsc_settings=$vsc_dir/settings.json
+	vsc_keybindings=$vsc_dir/keybindings.json
+	test ! -e $vsc_settings && symlink .vscode/settings.json $vsc_settings
+	test ! -e $vsc_keybindings && symlink .vscode/keybindings.json $vsc_keybindings
 fi
 
 echo "Checking for SSH keys..."
@@ -51,3 +54,4 @@ if [[ $(git config --get remote.origin.url) == https://* ]]; then
 fi
 
 echo "Done."
+
