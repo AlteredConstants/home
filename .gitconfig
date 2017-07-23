@@ -11,8 +11,6 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	sup = submodule update --recursive
 	graph = log --graph --abbrev-commit --pretty=format:'%Cred%h %Cgreen(%cr)%Creset %C(bold blue)<%an>%Creset -%C(yellow)%d%Creset %s'
-[init]
-	templatedir = ~/.git-template
 [push]
 	default = upstream
 [fetch]
