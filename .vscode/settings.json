@@ -18,6 +18,8 @@
   "workbench.editor.revealIfOpen": true,
   "workbench.startupEditor": "newUntitledFile",
   "flow.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.codeLens.authors.enabled": false,
   "settings.cycle": [
     {
       "id": "formatOnSave",
