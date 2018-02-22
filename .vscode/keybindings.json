@@ -1,11 +1,7 @@
 // Place your key bindings in this file to overwrite the defaults
 [
-    {
-        "key": "ctrl+shift+s",
-        "command": "macros.preventFormatOnSave"
-    },
-    {
-        "key": "ctrl+shift+`",
-        "command": "shellLauncher.launch"
-    }
+  {
+    "key": "ctrl+shift+`",
+    "command": "shellLauncher.launch"
+  }
 ]
