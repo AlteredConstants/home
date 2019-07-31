@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if ! git diff --unified=0 -- package-lock.json | \
+	grep '^[-+] ' | \
+	grep -Pv '^[\-+]\s+"(bundled|dev|optional)": true,?$'
+then
+	git checkout -- package-lock.json
+fi
+
