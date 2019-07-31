@@ -78,25 +78,38 @@ done
 if $check_new || $delete_old; then
 	echo "Fetching..."
 	git fetch >/dev/null 2>&1 || echo "Fetching failed."
-	remote_branches=$(git for-each-ref --format="%(refname:short)" | \
+	remote_branches=$(
+		git for-each-ref --format="%(refname:short)" | \
 		grep -Ei "^origin/$branch_prefix_pattern/$ticket_prefix" | \
 		sed -Ee "s#^origin/$branch_prefix_pattern/##" | \
-		sort)
+		sort
+	)
+	local_tracked_branches=$(
+		git for-each-ref --format='%(upstream) %(refname:short)' refs/heads | \
+		grep -Ei "^refs/remotes/origin/$branch_prefix_pattern/$ticket_prefix" | \
+		cut -d' ' -f2 | \
+		sed -Ee "s#^$branch_prefix_pattern/##" | \
+		sort
+	)
 fi
 
-local_branches=$(git for-each-ref --format="%(refname:short)" | \
+local_branches=$(
+	git for-each-ref --format="%(refname:short)" | \
 	grep -Ei "^$branch_prefix_pattern/$ticket_prefix" | \
 	sed -Ee "s#^$branch_prefix_pattern/##" | \
-	sort)
+	sort
+)
 
 if $check_new; then
-	new_branches=$(comm -13 \
-		<(echo "$local_branches") <(echo "$remote_branches"))
+	new_branches=$(
+		comm -13 <(echo "$local_branches") <(echo "$remote_branches")
+	)
 	prompt_for_branch $new_branches
 	git checkout $selected_branch
 elif $delete_old; then
-	old_branches=$(comm -23 \
-		<(echo "$local_branches") <(echo "$remote_branches"))
+	old_branches=$(
+		comm -23 <(echo "$local_tracked_branches") <(echo "$remote_branches")
+	)
 	prompt_for_branch $old_branches
 	git branch -d $selected_branch
 else
