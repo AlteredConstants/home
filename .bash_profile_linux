@@ -2,9 +2,17 @@
 
 export EDITOR=/usr/bin/vim
 
-# Load NVM
+## Load NVM
+# nvm's setup is slow and I don't use it often. Lazy load it by wrapping it in
+# a function by the same name. When first invoked in a session, unset the
+# wrapper, load the real nvm, and invoke it with the provided parameters.
+# Base on: https://github.com/ravron/dotfiles/blob/2093bb4b257db221f31fa900cfc8cd394476a7cd/.bashrc#L233-L243
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm() {
+	unset nvm
+	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+	nvm "$@"
+}
 
 if [[ $(run-lib get-win-env) == wsl ]]; then
 	export DISPLAY=:0
