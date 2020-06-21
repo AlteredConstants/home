@@ -17,6 +17,7 @@
   "files.trimTrailingWhitespace": true,
   "git.autofetch": true,
   "git.autoRepositoryDetection": "subFolders",
+  "git.detectSubmodules": false,
   "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe",
   "terminal.integrated.shellArgs.windows": ["~/scripts/tmd"],
   "tslint.ignoreDefinitionFiles": false,
