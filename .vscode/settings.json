@@ -26,8 +26,10 @@
   "workbench.colorTheme": "Monokai",
   "workbench.editor.revealIfOpen": true,
   "workbench.startupEditor": "newUntitledFile",
-
   "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
@@ -36,7 +38,9 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "gitlens.advanced.messages": {
     "suppressShowKeyBindingsNotice": true,
     "suppressUpdateNotice": true,
@@ -47,7 +51,6 @@
   "gitlens.showWhatsNewAfterUpgrades": false,
   "gitlens.views.fileHistory.enabled": true,
   "gitlens.views.lineHistory.enabled": true,
-
   "shellLauncher.shells.windows": [
     {
       "shell": "C:\\Windows\\sysnative\\bash.exe",
