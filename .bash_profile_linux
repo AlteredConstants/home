@@ -15,7 +15,8 @@ nvm() {
 }
 
 if [[ $(run-lib get-win-env) == wsl ]]; then
-	export DISPLAY=:0
+	# WSL 2 currently doesn't support localhost so we need to get the generated IP.
+	export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | cut -d' ' -f2):0.0
 
 	function open {
 		explorer.exe /e,$(convert-path -w ${1-$PWD})
