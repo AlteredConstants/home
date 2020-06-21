@@ -14,7 +14,10 @@ target=$1
 [[ -n $target ]] || exit-usage-error "missing target path"
 [[ -e $target ]] || exit-usage-error "target path does not exist"
 
-if [[ -z $(run-lib get-win-env) ]]; then
+windows_env=$(run-lib get-win-env)
+
+if [[ -z $windows_env || $windows_env == wsl ]]; then
+	mkdir -p "$(dirname "$2")"
 	ln -s "$@"
 	exit $?
 fi

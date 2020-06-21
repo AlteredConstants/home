@@ -6,7 +6,7 @@ if [[ $kernel_name =~ ^CYGWIN ]]; then
 	echo cygwin
 elif [[ $kernel_name =~ ^(MSYS_NT|MINGW) ]]; then
 	echo mingw
-elif [[ $kernel_release =~ Microsoft$ ]]; then
+elif [[ ${kernel_release,,} =~ microsoft ]]; then
 	echo wsl
 else
 	exit 1
