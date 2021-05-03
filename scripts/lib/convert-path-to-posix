@@ -5,17 +5,20 @@ path=$1
 if [[ -z $path ]]; then
 	exit-error "missing path argument"
 fi
-if run-lib is-cygwin; then
-	cygpath -u "$path"
-else
+
+function convert-mingw {
+	path=$1
 	if grep -iq '^[a-z]:' <<< "$path"; then
-		root=''
-		if [[ $(run-lib get-win-env) == wsl ]]; then
-			root='/mnt'
-		fi
-		path="$root/$(sed -re 's|^([a-z]):|\l\1|I' <<< "$path")"
+		path="/$(sed -re 's|^([a-z]):|\l\1|I' <<< "$path")"
 	fi
 	cd 2>/dev/null "$path" && pwd || \
 	sed -re 's|\\|/|g' -e 's|/+|/|g' -e 's|/$||' <<< "$path"
-fi
+}
+
+case "$(run-lib get-win-env)" in
+cygwin) cygpath -u "$path" ;;
+wsl) wslpath -w "$path" ;;
+mingw) convert-mingw "$path" ;;
+*) exit-error "unsupported Windows environment type" ;;
+esac
 

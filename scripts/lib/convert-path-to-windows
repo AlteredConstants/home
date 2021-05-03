@@ -6,10 +6,11 @@ if [[ -z $path ]]; then
 	exit-error "missing path argument"
 fi
 
-function convert {
-	realpath -m "${1:-$path}" | \
+function convert-mingw {
+	dir_path=$(cd 2>/dev/null "$1" && pwd -W 2>/dev/null)
+	realpath -m "${dir_path:-$1}" | \
 	sed -r \
-		-e 's|^/(mnt/)?([a-z])/|\2:/|I' \
+		-e 's|^/([a-z])/|\1:/|I' \
 		-e 's|/+|/|g' \
 		-e 's|/$||' \
 		-e 's|/|\\|g'
@@ -17,7 +18,8 @@ function convert {
 
 case "$(run-lib get-win-env)" in
 cygwin) cygpath -w "$path" ;;
-mingw) convert "$(cd 2>/dev/null "$path" && pwd -W 2>/dev/null)" ;;
-*) convert ;;
+wsl) wslpath -w "$path" ;;
+mingw) convert-mingw "$path" ;;
+*) exit-error "unsupported Windows environment type" ;;
 esac
 
