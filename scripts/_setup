@@ -26,17 +26,7 @@ echo "Updating submodules..."
 git submodule update --init --recursive
 
 echo "Creating symlinks..."
-if [[ -n $(run-lib get-win-env) ]]; then
-	if [[ $(run-lib get-win-env) == wsl ]]; then
-		vsc_dir=.config/Code/User
-	else
-		vsc_dir=$(convert-path -p "$(run-lib get-win-var APPDATA)")/Code/User
-	fi
-	vsc_settings=$vsc_dir/settings.json
-	vsc_keybindings=$vsc_dir/keybindings.json
-	test ! -e $vsc_settings && symlink .vscode/settings.json $vsc_settings
-	test ! -e $vsc_keybindings && symlink .vscode/keybindings.json $vsc_keybindings
-fi
+run-lib setup-symlinks
 
 echo "Checking for SSH keys..."
 if  [[ ! -f .ssh/id_rsa.pub ]]; then
