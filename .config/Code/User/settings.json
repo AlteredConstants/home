@@ -24,8 +24,10 @@
   "terminal.integrated.commandsToSkipShell": [
     "-workbench.action.quickOpenView"
   ],
-  "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe",
-  "terminal.integrated.shellArgs.windows": ["~/scripts/tmd"],
+  "terminal.integrated.shell.linux": "bash",
+  "terminal.integrated.shellArgs.linux": ["--login", "${env:HOME}/scripts/tmd"],
+  "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+  "terminal.integrated.shellArgs.windows": ["--login"],
   "tslint.ignoreDefinitionFiles": false,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "window.zoomLevel": 0,
@@ -48,32 +50,5 @@
   "gitlens.codeLens.recentChange.enabled": false,
   "gitlens.showWhatsNewAfterUpgrades": false,
   "gitlens.views.fileHistory.enabled": true,
-  "gitlens.views.lineHistory.enabled": true,
-  "shellLauncher.shells.windows": [
-    {
-      "shell": "C:\\Windows\\sysnative\\bash.exe",
-      "args": ["~/scripts/ts"],
-      "label": "tmux Ubuntu Shell"
-    },
-    {
-      "shell": "C:\\Program Files\\Git\\bin\\bash.exe",
-      "args": ["-l"],
-      "label": "Git Bash Shell"
-    },
-    {
-      "shell": "C:\\Windows\\sysnative\\bash.exe",
-      "args": [],
-      "label": "Ubuntu Shell"
-    },
-    {
-      "shell": "C:\\WINDOWS\\Sysnative\\WindowsPowerShell\\v1.0\\powershell.exe",
-      "args": [],
-      "label": "Powershell"
-    },
-    {
-      "shell": "C:\\Windows\\System32\\cmd.exe",
-      "args": [],
-      "label": "CMD Shell"
-    }
-  ]
+  "gitlens.views.lineHistory.enabled": true
 }
