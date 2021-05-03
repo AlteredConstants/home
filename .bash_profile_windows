@@ -13,6 +13,9 @@ function sudo {
 	esac
 }
 
+export NVS_HOME=$LOCALAPPDATA/nvs
+. $NVS_HOME/nvs.sh
+
 if run-lib is-cygwin; then
 	alias kdiff3=kdiff3-cygwin
 

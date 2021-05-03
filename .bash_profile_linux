@@ -14,6 +14,9 @@ nvm() {
 	nvm "$@"
 }
 
+export NVS_HOME="$HOME/.nvs"
+[ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh"
+
 if [[ $(run-lib get-win-env) == wsl ]]; then
 	# WSL 2 currently doesn't support localhost so we need to get the generated IP.
 	export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | cut -d' ' -f2):0.0

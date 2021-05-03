@@ -26,5 +26,7 @@ case "$(run-lib get-platform)" in
 		;;
 esac
 
+nvs auto
+
 popd >/dev/null
 
