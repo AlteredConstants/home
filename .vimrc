@@ -1,9 +1,18 @@
 "Add $HOME/.vim and $HOME/.vim/after to &rtp on Windows
-"From: http://stackoverflow.com/a/10622083
-let g:my_vim_dir=expand("$HOME/.vim")
+"Based on:
+"https://stackoverflow.com/a/10622083
+"https://stackoverflow.com/a/43245241
+"https://superuser.com/a/1466466
 if has("win16") || has("win32") || has("win64")
-	execute "set rtp^=".g:my_vim_dir
-	execute "set rtp+=".g:my_vim_dir."\\after"
+	set runtimepath-=$HOME/vimfiles
+	set runtimepath^=$HOME/.vim
+	set runtimepath-=$HOME/vimfiles/after
+	set runtimepath+=$HOME/.vim/after
+
+	set packpath-=$HOME/vimfiles
+	set packpath^=$HOME/.vim
+	set packpath-=$HOME/vimfiles/after
+	set packpath+=$HOME/.vim/after
 
 	if &shell=~#'bash$'
 		set shell=$COMSPEC " sets shell to correct path for cmd.exe
@@ -14,7 +23,6 @@ if has("win16") || has("win32") || has("win64")
 endif
 
 set nocompatible
-execute pathogen#infect()
 
 set autoindent
 set smartindent
@@ -29,6 +37,6 @@ set directory=.,$TEMP
 
 syntax enable
 set background=dark
-colorscheme solarized
+colorscheme solarized8_flat
 
 set hlsearch
